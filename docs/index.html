@@ -22,91 +22,131 @@
     </div>
   </header>
 
+  <div class="marquee" aria-label="Latest post">
+    <div class="marquee-track">
+      <span class="marquee-item" id="ticker">★ loading the latest… ★</span>
+      <span class="marquee-item" id="ticker-copy" aria-hidden="true"></span>
+    </div>
+  </div>
+
   <main class="layout">
     <!-- Left column: profile ------------------------------------------>
     <aside class="profile-col">
-      <section class="profile">
-        <h1 class="profile-name">Aniket Maithani</h1>
-        <div class="profile-card">
-          <img class="profile-pic" src="avatar.jpg" width="150" height="150"
-               alt="Photo of Aniket Maithani">
-          <dl class="profile-facts">
-            <div><dt class="visually-hidden">Status</dt>
-              <dd id="online" class="online" hidden>● Posted recently</dd>
-            </div>
-            <div><dt>Posts</dt><dd id="stat-posts">0</dd></div>
-            <div><dt>Last post</dt><dd id="stat-last">never</dd></div>
-            <div><dt>Working on</dt><dd id="stat-now">—</dd></div>
-          </dl>
+      <section class="win">
+        <h1 class="win-title">
+          <span>Aniket Maithani</span>
+          <span class="win-btns" aria-hidden="true">
+            <i>_</i><i>□</i><i>×</i></span>
+        </h1>
+        <div class="win-body">
+          <div class="profile-card">
+            <img class="profile-pic" src="avatar.jpg" width="130"
+                 height="130" alt="Photo of Aniket Maithani">
+            <dl class="profile-facts">
+              <div id="online" class="online" hidden>
+                <dt class="visually-hidden">Status</dt>
+                <dd><span class="blink">●</span> Posted recently!</dd>
+              </div>
+              <div><dt>Posts</dt><dd id="stat-posts">0</dd></div>
+              <div><dt>Last post</dt><dd id="stat-last">never</dd></div>
+            </dl>
+          </div>
+          <div class="now-box">
+            <span class="now-label">Currently working on:</span>
+            <a id="now-project" class="now-project" href="./" hidden></a>
+            <span id="now-none" class="now-none">nothing yet</span>
+          </div>
         </div>
       </section>
 
-      <section class="box">
-        <h2 class="box-title">Contact Aniket</h2>
-        <ul class="contact-grid">
-          <li>
-            <a href="https://aniketmaithani.net">
-              <span class="contact-icon" aria-hidden="true">www</span>
-              Website
-            </a>
-          </li>
-          <li>
-            <a href="https://linkedin.com/in/aniketmaithani">
-              <span class="contact-icon" aria-hidden="true">in</span>
-              LinkedIn
-            </a>
-          </li>
-          <li>
-            <a href="https://github.com/aniketmaithani">
-              <span class="contact-icon" aria-hidden="true">gh</span>
-              GitHub
-            </a>
-          </li>
-          <li>
-            <a href="https://github.com/aniketmaithani/devlog">
-              <span class="contact-icon" aria-hidden="true">src</span>
-              Source
-            </a>
-          </li>
+      <section class="win">
+        <h2 class="win-title">
+          <span>Contact Aniket</span>
+          <span class="win-btns" aria-hidden="true"><i>×</i></span>
+        </h2>
+        <ul class="win-body contact-grid">
+          <li><a class="btn" href="https://aniketmaithani.net">
+            🌐 Website</a></li>
+          <li><a class="btn" href="https://linkedin.com/in/aniketmaithani">
+            💼 LinkedIn</a></li>
+          <li><a class="btn" href="https://github.com/aniketmaithani">
+            🐙 GitHub</a></li>
+          <li><a class="btn" href="https://github.com/aniketmaithani/devlog">
+            📜 Source</a></li>
         </ul>
       </section>
 
-      <section class="box url-box">
-        <p><strong>devlog URL:</strong><br>
-          <a href="https://aniketmaithani.net/devlog/">
-            aniketmaithani.net/devlog</a></p>
+      <section class="win">
+        <h2 class="win-title">
+          <span>Aniket's Details</span>
+          <span class="win-btns" aria-hidden="true"><i>×</i></span>
+        </h2>
+        <div class="win-body">
+          <table class="details">
+            <tr><th scope="row">Based in</th>
+              <td>New Delhi, India</td></tr>
+            <tr><th scope="row">devlog URL</th>
+              <td><a href="https://aniketmaithani.net/devlog/">
+                aniketmaithani.net/devlog</a></td></tr>
+            <tr><th scope="row">Projects</th>
+              <td id="project-list" class="project-list">—</td></tr>
+          </table>
+        </div>
       </section>
 
-      <section class="box">
-        <h2 class="box-title">Aniket's Details</h2>
-        <table class="details">
-          <tr><th scope="row">Based in</th>
-            <td>New Delhi, India</td></tr>
-          <tr><th scope="row">Projects</th>
-            <td id="project-list" class="project-list">—</td></tr>
-        </table>
+      <section class="win">
+        <h2 class="win-title">
+          <span>Posts logged</span>
+          <span class="win-btns" aria-hidden="true"><i>×</i></span>
+        </h2>
+        <div class="win-body counter-body">
+          <span id="odometer" class="odometer" aria-label="0 posts"></span>
+        </div>
       </section>
     </aside>
 
     <!-- Right column: timeline ---------------------------------------->
-    <section class="timeline-col" aria-labelledby="timeline-title">
-      <div class="network-banner">
-        Aniket is building in public. Follow along below.
+    <section class="timeline-col">
+      <div class="banner">
+        ✨ Aniket is building in public. Follow along below! ✨
       </div>
 
-      <div class="box timeline-box">
-        <h2 id="timeline-title" class="box-title box-title-alt">
-          Aniket's devlog
-          <span id="post-count" class="box-title-meta"></span>
+      <section class="win" id="timeline" aria-labelledby="timeline-title">
+        <h2 class="win-title">
+          <span id="timeline-title">Aniket's devlog</span>
+          <span id="post-count" class="win-title-meta"></span>
         </h2>
-        <p id="feed-status" class="feed-status" role="status"></p>
-        <ol id="feed" class="feed" aria-live="polite"></ol>
-        <p id="empty" class="empty" hidden>No posts yet.</p>
-      </div>
+        <div class="win-body timeline-body">
+          <form class="toolbar" role="search" id="search-form">
+            <label class="visually-hidden" for="search">Search posts</label>
+            <input id="search" class="field" type="search"
+                   placeholder="search posts…  (press /)"
+                   autocomplete="off" spellcheck="false">
+            <a id="filter-chip" class="chip" href="./" hidden
+               title="Show all projects"></a>
+          </form>
+          <p id="feed-status" class="feed-status" role="status"></p>
+          <ol id="feed" class="feed" aria-live="polite"></ol>
+          <p id="empty" class="empty" hidden>No posts yet.</p>
+          <nav id="pager" class="pager" aria-label="Pages" hidden></nav>
+        </div>
+      </section>
     </section>
   </main>
 
-  <footer class="site-footer">updates every 15s</footer>
+  <div class="construction" role="presentation">
+    <span>🚧 this page is permanently under construction 🚧</span>
+  </div>
+
+  <footer class="site-footer">
+    <div class="badges" aria-label="Badges">
+      <span class="badge"><b>GitHub</b><i>Pages</i></span>
+      <span class="badge"><b>Python</b><i>stdlib</i></span>
+      <span class="badge"><b>NO</b><i>frameworks</i></span>
+      <span class="badge"><b>800×600</b><i>best viewed</i></span>
+    </div>
+    <p>updates every 15s</p>
+  </footer>
   <script src="app.js" defer></script>
 </body>
 </html>

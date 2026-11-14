@@ -63,12 +63,30 @@ feed (GitHub Pages, /docs) <--polls posts.json every 15s-- Pages deploy
 
 ## The page
 
-The feed is a profile page in a MySpace-ish style: the profile (photo,
-post count, last post, current project), contact links and details on the
-left, and a Twitter-style timeline on the right. The photo is
-`docs/avatar.jpg` (a copy of the GitHub avatar). The name, links and
-location are plain HTML in `docs/index.html`. The stats and project list
-are computed from `posts.json` in `docs/app.js`.
+A 90s personal homepage crossed with a MySpace profile. It has a
+teal-desktop wallpaper (a starfield in dark mode), Win95-style windows,
+a scrolling ticker of the latest post, a post-count odometer, NEW! badges
+and an under-construction strip.
+
+- **Left:** photo (`docs/avatar.jpg`), post stats, **Currently working
+  on** (the project of your latest tagged post), contact links, details
+  and a project list.
+- **Right:** a Twitter-style timeline, 10 posts per page, with search.
+
+Views are stored in the URL, so they can be shared:
+
+| URL                         | Shows                                 |
+| --------------------------- | ------------------------------------- |
+| `?project=Project+dhi-aid`  | one project's timeline                |
+| `?q=redis`                  | search results (all words must match) |
+| `?page=2`                   | page 2                                |
+
+Clicking a project (the "Currently working on" link, a tag on a post or
+one in the project list) opens that project's timeline. The ✕ chip
+clears it. Press `/` to jump to search and `Esc` to clear it.
+
+The name, links and location are plain HTML in `docs/index.html`.
+Everything else is computed from `posts.json` in `docs/app.js`.
 
 ## Layout
 

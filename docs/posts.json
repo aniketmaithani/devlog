@@ -1,5 +1,11 @@
 [
   {
+    "id": 1794658419960,
+    "text": "Done with the basics. Adding delete flow (hard and soft both): \nA[Teacher uploads PDF] --> B[Original saved in private bucket]\n    B --> C[GPU worker reads and renders pages]\n    C --> D[AIFS prepares detailed material]\n    D --> E[AIFS generates script, board steps and diagrams]\n    E --> F[Teacher reviews and optionally edits]\n    F --> G[Approved lesson saved in bucket]\n\nThere are additional steps to this but let's keep this abstract!",
+    "project": "Project dhi-aid",
+    "created_at": "2026-11-14T12:13:39Z"
+  },
+  {
     "id": 1794657950136,
     "text": "Vision Model to the resuce. Now need to write additional pipeline to get the pdf -> notes part. And then will test each thing manually. This is just beginning. Time on project 5 hours approx! and still working. #JaaneKyaHoga",
     "project": "Project dhi-aid",

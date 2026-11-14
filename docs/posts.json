@@ -1,5 +1,11 @@
 [
   {
+    "id": 1794665212343,
+    "text": "Aah! this commit contains many changes! need to break them down into atomic changes!",
+    "project": "Project dhi-aid",
+    "created_at": "2026-11-14T14:06:52Z"
+  },
+  {
     "id": 1794663975186,
     "text": "While working we found the main script issue: the authoring prompt treats the upload too much like a document walkthrough. I’m changing it to teach the chapter directly, with a chapter-wide introduction and private review notes. For the board, I’m adding graphics so that chapter can easily be understood.  #GoGoGo . Time to work on pipeline and live photorealism!",
     "project": "Project dhi-aid",

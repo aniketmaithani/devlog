@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>devlog composer</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f7f7f5;
+      --card: #ffffff;
+      --fg: #1c1c1e;
+      --muted: #6b6b70;
+      --border: #e2e2e0;
+      --accent: #2f6fde;
+      --ok: #1f8a4c;
+      --warn: #c0392b;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #111214;
+        --card: #1a1b1e;
+        --fg: #e9e9ec;
+        --muted: #9a9aa2;
+        --border: #2c2d31;
+        --accent: #6c9bff;
+        --ok: #4cc27f;
+        --warn: #ff7a6b;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+    main { max-width: 600px; margin: 0 auto; padding: 32px 16px; }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 16px;
+    }
+    h1 { font-size: 1.25rem; margin: 0; }
+    a { color: var(--accent); }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+    }
+    textarea, input {
+      width: 100%;
+      font: inherit;
+      color: inherit;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+    textarea { min-height: 120px; resize: vertical; }
+    textarea:focus, input:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: -1px;
+    }
+    textarea:disabled { opacity: 0.6; }
+    .row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-top: 12px;
+    }
+    .row input { flex: 1; }
+    button {
+      font: inherit;
+      font-weight: 600;
+      border: 0;
+      border-radius: 999px;
+      padding: 8px 20px;
+      background: var(--accent);
+      color: #fff;
+      cursor: pointer;
+    }
+    button:disabled { opacity: 0.45; cursor: not-allowed; }
+    .counter {
+      font-variant-numeric: tabular-nums;
+      color: var(--muted);
+      font-size: 0.875rem;
+      white-space: nowrap;
+    }
+    .counter.over { color: var(--warn); font-weight: 600; }
+    .hint { color: var(--muted); font-size: 0.8125rem; margin-top: 8px; }
+    .status { min-height: 1.5em; margin-top: 12px; font-size: 0.9375rem; }
+    .status.ok { color: var(--ok); }
+    .status.error { color: var(--warn); }
+    .status.busy { color: var(--muted); }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>devlog composer</h1>
+      <a id="feed-link" href="#" target="_blank" rel="noopener">open feed</a>
+    </header>
+    <form id="composer" class="card" autocomplete="off">
+      <label for="text" hidden>What are you working on?</label>
+      <textarea id="text" placeholder="What are you working on?"
+                autofocus></textarea>
+      <div class="row">
+        <input id="project" maxlength="40" placeholder="project (optional)"
+               aria-label="Project tag">
+        <span id="counter" class="counter" aria-live="polite"></span>
+        <button id="submit" type="submit" disabled>Post</button>
+      </div>
+      <div class="hint">Enter to post · Shift+Enter for a new line</div>
+      <div id="status" class="status" role="status"></div>
+    </form>
+  </main>
+  <script>
+    "use strict";
+
+    const PROJECT_KEY = "devlog.project";
+    const POLL_MS = 5000;
+    const POLL_GIVE_UP_MS = 10 * 60 * 1000;
+
+    const form = document.getElementById("composer");
+    const textEl = document.getElementById("text");
+    const projectEl = document.getElementById("project");
+    const counterEl = document.getElementById("counter");
+    const submitEl = document.getElementById("submit");
+    const statusEl = document.getElementById("status");
+    const feedLink = document.getElementById("feed-link");
+
+    let config = { limit_type: "words", limit: 160 };
+    let publishing = false;
+    let pollTimer = null;
+
+    function countUnits(text) {
+      const trimmed = text.trim();
+      if (config.limit_type === "words") {
+        return trimmed ? trimmed.split(/\s+/).length : 0;
+      }
+      return [...trimmed.replace(/\r\n?/g, "\n")].length;
+    }
+
+    function canPost() {
+      const used = countUnits(textEl.value);
+      return !publishing && used > 0 && used <= config.limit;
+    }
+
+    function updateCounter() {
+      const used = countUnits(textEl.value);
+      counterEl.textContent = `${used} / ${config.limit} ${config.limit_type}`;
+      counterEl.classList.toggle("over", used > config.limit);
+      submitEl.disabled = !canPost();
+    }
+
+    function setStatus(message, kind) {
+      statusEl.textContent = message;
+      statusEl.className = `status ${kind || ""}`;
+    }
+
+    function setPublishing(value) {
+      publishing = value;
+      textEl.disabled = value;
+      projectEl.disabled = value;
+      updateCounter();
+      if (!value) textEl.focus();
+    }
+
+    function loadProject() {
+      try {
+        projectEl.value = localStorage.getItem(PROJECT_KEY) || "";
+      } catch (e) { /* storage unavailable */ }
+    }
+
+    function saveProject() {
+      try {
+        localStorage.setItem(PROJECT_KEY, projectEl.value.trim());
+      } catch (e) { /* storage unavailable */ }
+    }
+
+    async function loadConfig() {
+      try {
+        const res = await fetch("/config");
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        config = await res.json();
+        feedLink.href = config.feed_url;
+      } catch (e) {
+        setStatus(`Could not load config: ${e.message}`, "error");
+      }
+      updateCounter();
+    }
+
+    async function sendPost(text, project) {
+      const res = await fetch("/post", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text, project: project || null }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+      return data;
+    }
+
+    function stopPolling() {
+      if (pollTimer) clearTimeout(pollTimer);
+      pollTimer = null;
+    }
+
+    function pollStatus(commit, startedAt) {
+      stopPolling();
+      pollTimer = setTimeout(async () => {
+        let state = "pending";
+        try {
+          const res = await fetch(`/status?commit=${commit}`);
+          state = (await res.json()).state;
+        } catch (e) { /* keep polling */ }
+        if (state === "live") {
+          setStatus("Live on Pages ✓", "ok");
+        } else if (state === "errored") {
+          setStatus("Committed, but the Pages build failed", "error");
+        } else if (Date.now() - startedAt > POLL_GIVE_UP_MS) {
+          setStatus("Committed (stopped waiting for Pages)", "busy");
+        } else {
+          pollStatus(commit, startedAt);
+        }
+      }, POLL_MS);
+    }
+
+    async function publish() {
+      if (!canPost()) return;
+      const text = textEl.value;
+      const project = projectEl.value.trim();
+      saveProject();
+      stopPolling();
+      setPublishing(true);
+      setStatus("Publishing…", "busy");
+      try {
+        const { commit } = await sendPost(text, project);
+        textEl.value = "";
+        setStatus("Committed · waiting for Pages deploy…", "ok");
+        pollStatus(commit, Date.now());
+      } catch (e) {
+        setStatus(`Failed: ${e.message}`, "error");
+      } finally {
+        setPublishing(false);
+      }
+    }
+
+    textEl.addEventListener("input", updateCounter);
+    textEl.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" || event.shiftKey || event.isComposing) {
+        return;
+      }
+      event.preventDefault();
+      publish();
+    });
+    projectEl.addEventListener("change", saveProject);
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      publish();
+    });
+
+    loadProject();
+    loadConfig();
+  </script>
+</body>
+</html>

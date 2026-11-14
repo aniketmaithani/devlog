@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>devlog</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <header class="site-header">
+      <h1>devlog</h1>
+      <p class="tagline">short updates on what I'm working on</p>
+    </header>
+    <p id="feed-status" class="feed-status" role="status"></p>
+    <ol id="feed" class="feed" aria-live="polite"></ol>
+    <p id="empty" class="empty" hidden>No posts yet.</p>
+    <footer class="site-footer">updates every 15s</footer>
+  </main>
+  <script src="app.js" defer></script>
+</body>
+</html>

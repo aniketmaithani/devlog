@@ -1,5 +1,11 @@
 [
   {
+    "id": 1794652699222,
+    "text": "Woah! \nThe app now uploads and retrieves:\n\n- Original PDFs\n- Source-page images\n- Generated teaching-material JSON",
+    "project": "Project dhi-aid",
+    "created_at": "2026-11-14T10:38:19Z"
+  },
+  {
     "id": 1794651294483,
     "text": "Implemented. Open a course → Chapter materials → upload your PDF\nThis was easy. Testing took bit of time. NEed to parallelise the process of extracting info from the chapters. Let's see how this performs in real world. Post this I'll start with next part which is ...",
     "project": "Project dhi-aid",

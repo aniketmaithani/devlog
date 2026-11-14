@@ -4,7 +4,7 @@ A tiny Twitter-style microblog. Write short updates in a local composer;
 they're committed to this repo and show up on a GitHub Pages feed that
 refreshes itself.
 
-- **Feed:** https://aniketmaithani.github.io/devlog/
+- **Feed:** http://aniketmaithani.net/devlog/ (custom domain; aniketmaithani.github.io/devlog redirects there)
 - **Composer:** runs only on your machine, never served by Pages.
 
 ## Run the composer

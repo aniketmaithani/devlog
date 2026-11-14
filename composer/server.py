@@ -84,8 +84,13 @@ def contents_endpoint(owner):
     return f"repos/{owner}/{REPO}/contents/{POSTS_PATH}"
 
 
-def feed_url(owner):
-    return f"https://{owner.lower()}.github.io/{REPO}/"
+def get_feed_url(owner):
+    """Return the Pages URL (honours custom domains), with a fallback."""
+    try:
+        url = run_gh(["api", f"repos/{owner}/{REPO}/pages", "-q", ".html_url"])
+    except GhError:
+        url = ""
+    return url.strip() or f"https://{owner.lower()}.github.io/{REPO}/"
 
 
 # --- config and validation ------------------------------------------------
@@ -287,7 +292,7 @@ class ComposerHandler(BaseHTTPRequestHandler):
 
     def serve_config(self):
         config = load_config()
-        config["feed_url"] = feed_url(self.server.owner)
+        config["feed_url"] = self.server.feed_url
         self.send_json(HTTPStatus.OK, config)
 
     def serve_status(self):
@@ -353,8 +358,9 @@ def main():
     owner = get_owner()
     server = ThreadingHTTPServer((HOST, PORT), ComposerHandler)
     server.owner = owner
+    server.feed_url = get_feed_url(owner)
     print(f"devlog composer: http://{HOST}:{PORT}  (repo {owner}/{REPO})")
-    print(f"public feed:     {feed_url(owner)}")
+    print(f"public feed:     {server.feed_url}")
     try:
         server.serve_forever()
     except KeyboardInterrupt:

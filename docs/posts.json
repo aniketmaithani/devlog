@@ -1,5 +1,11 @@
 [
   {
+    "id": 1794646600750,
+    "text": "Okay. So i have to setup the Docker Container. Easy peasy! for starters. RBAC is love! Designed so many systems over the years that i know the drill pretty well! (5/n)",
+    "project": "Project dhi-aid",
+    "created_at": "2026-11-14T08:56:40Z"
+  },
+  {
     "id": 1794646057121,
     "text": "Okay! so here it is : Pinned motion settings, rendering source, package versions, and model hashes.\n- Verified source checksums, all 328 external dependency hashes, and both reference/base videos.\n- Kept .env, model binaries, and generated media out of Git.\n- No GPU renders launched",
     "project": "Project dhi-aid",

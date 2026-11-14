@@ -1,5 +1,11 @@
 [
   {
+    "id": 1794657950136,
+    "text": "Vision Model to the resuce. Now need to write additional pipeline to get the pdf -> notes part. And then will test each thing manually. This is just beginning. Time on project 5 hours approx! and still working. #JaaneKyaHoga",
+    "project": "Project dhi-aid",
+    "created_at": "2026-11-14T12:05:50Z"
+  },
+  {
     "id": 1794655883318,
     "text": "Got Stuck! Need a local LLM vision model to do faster extraction #ProjectWoes!",
     "project": "Project dhi-aid",

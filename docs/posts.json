@@ -1,5 +1,11 @@
 [
   {
+    "id": 1794655578726,
+    "text": "Trying to give this page a 90s look! Somehow I like it :P",
+    "project": "devlog",
+    "created_at": "2026-11-14T11:26:18Z"
+  },
+  {
     "id": 1794654801784,
     "text": "kids! don't forget proper logging ! print statements are so so so F**up in prod!",
     "project": "Project dhi-aid",

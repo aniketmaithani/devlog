@@ -1,5 +1,11 @@
 [
   {
+    "id": 1794663975186,
+    "text": "While working we found the main script issue: the authoring prompt treats the upload too much like a document walkthrough. I’m changing it to teach the chapter directly, with a chapter-wide introduction and private review notes. For the board, I’m adding graphics so that chapter can easily be understood.  #GoGoGo . Time to work on pipeline and live photorealism!",
+    "project": "Project dhi-aid",
+    "created_at": "2026-11-14T13:46:15Z"
+  },
+  {
     "id": 1794658419960,
     "text": "Done with the basics. Adding delete flow (hard and soft both): \nA[Teacher uploads PDF] --> B[Original saved in private bucket]\n    B --> C[GPU worker reads and renders pages]\n    C --> D[AIFS prepares detailed material]\n    D --> E[AIFS generates script, board steps and diagrams]\n    E --> F[Teacher reviews and optionally edits]\n    F --> G[Approved lesson saved in bucket]\n\nThere are additional steps to this but let's keep this abstract!",
     "project": "Project dhi-aid",

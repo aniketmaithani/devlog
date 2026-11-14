@@ -4,7 +4,7 @@ A tiny Twitter-style microblog. Write short updates in a local composer;
 they're committed to this repo and show up on a GitHub Pages feed that
 refreshes itself.
 
-- **Feed:** http://aniketmaithani.net/devlog/ (custom domain; aniketmaithani.github.io/devlog redirects there)
+- **Feed:** https://aniketmaithani.net/devlog/
 - **Composer:** runs only on your machine, never served by Pages.
 
 ## Run the composer
@@ -61,10 +61,20 @@ feed (GitHub Pages, /docs) <--polls posts.json every 15s-- Pages deploy
    `textContent` only; URLs become `http(s)` links and line breaks are
    kept.
 
+## The page
+
+The feed is a profile page in a MySpace-ish style: the profile (photo,
+post count, last post, current project), contact links and details on the
+left, and a Twitter-style timeline on the right. The photo is
+`docs/avatar.jpg` (a copy of the GitHub avatar). The name, links and
+location are plain HTML in `docs/index.html`. The stats and project list
+are computed from `posts.json` in `docs/app.js`.
+
 ## Layout
 
 ```
-docs/       public feed (index.html, app.js, style.css, posts.json)
+docs/       public feed (index.html, app.js, style.css, posts.json,
+            avatar.jpg)
 composer/   local composer (server.py, index.html, config.json)
 ```
 

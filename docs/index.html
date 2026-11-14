@@ -4,20 +4,109 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
+  <meta name="description"
+        content="Aniket Maithani's devlog: short updates on what I'm building.">
   <title>devlog</title>
+  <link rel="icon" href="avatar.jpg">
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <main>
-    <header class="site-header">
-      <h1>devlog</h1>
-      <p class="tagline">short updates on what I'm working on</p>
-    </header>
-    <p id="feed-status" class="feed-status" role="status"></p>
-    <ol id="feed" class="feed" aria-live="polite"></ol>
-    <p id="empty" class="empty" hidden>No posts yet.</p>
-    <footer class="site-footer">updates every 15s</footer>
+<body data-name="Aniket Maithani" data-handle="aniketmaithani">
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="wordmark" href="./">devlog</a>
+      <nav class="topnav" aria-label="Elsewhere">
+        <a href="https://aniketmaithani.net">Home</a>
+        <a href="https://github.com/aniketmaithani">GitHub</a>
+        <a href="https://linkedin.com/in/aniketmaithani">LinkedIn</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="layout">
+    <!-- Left column: profile ------------------------------------------>
+    <aside class="profile-col">
+      <section class="profile">
+        <h1 class="profile-name">Aniket Maithani</h1>
+        <div class="profile-card">
+          <img class="profile-pic" src="avatar.jpg" width="150" height="150"
+               alt="Photo of Aniket Maithani">
+          <dl class="profile-facts">
+            <div><dt class="visually-hidden">Status</dt>
+              <dd id="online" class="online" hidden>● Posted recently</dd>
+            </div>
+            <div><dt>Posts</dt><dd id="stat-posts">0</dd></div>
+            <div><dt>Last post</dt><dd id="stat-last">never</dd></div>
+            <div><dt>Working on</dt><dd id="stat-now">—</dd></div>
+          </dl>
+        </div>
+      </section>
+
+      <section class="box">
+        <h2 class="box-title">Contact Aniket</h2>
+        <ul class="contact-grid">
+          <li>
+            <a href="https://aniketmaithani.net">
+              <span class="contact-icon" aria-hidden="true">www</span>
+              Website
+            </a>
+          </li>
+          <li>
+            <a href="https://linkedin.com/in/aniketmaithani">
+              <span class="contact-icon" aria-hidden="true">in</span>
+              LinkedIn
+            </a>
+          </li>
+          <li>
+            <a href="https://github.com/aniketmaithani">
+              <span class="contact-icon" aria-hidden="true">gh</span>
+              GitHub
+            </a>
+          </li>
+          <li>
+            <a href="https://github.com/aniketmaithani/devlog">
+              <span class="contact-icon" aria-hidden="true">src</span>
+              Source
+            </a>
+          </li>
+        </ul>
+      </section>
+
+      <section class="box url-box">
+        <p><strong>devlog URL:</strong><br>
+          <a href="https://aniketmaithani.net/devlog/">
+            aniketmaithani.net/devlog</a></p>
+      </section>
+
+      <section class="box">
+        <h2 class="box-title">Aniket's Details</h2>
+        <table class="details">
+          <tr><th scope="row">Based in</th>
+            <td>New Delhi, India</td></tr>
+          <tr><th scope="row">Projects</th>
+            <td id="project-list" class="project-list">—</td></tr>
+        </table>
+      </section>
+    </aside>
+
+    <!-- Right column: timeline ---------------------------------------->
+    <section class="timeline-col" aria-labelledby="timeline-title">
+      <div class="network-banner">
+        Aniket is building in public. Follow along below.
+      </div>
+
+      <div class="box timeline-box">
+        <h2 id="timeline-title" class="box-title box-title-alt">
+          Aniket's devlog
+          <span id="post-count" class="box-title-meta"></span>
+        </h2>
+        <p id="feed-status" class="feed-status" role="status"></p>
+        <ol id="feed" class="feed" aria-live="polite"></ol>
+        <p id="empty" class="empty" hidden>No posts yet.</p>
+      </div>
+    </section>
   </main>
+
+  <footer class="site-footer">updates every 15s</footer>
   <script src="app.js" defer></script>
 </body>
 </html>

@@ -1,26 +1,52 @@
+/* devlog: a MySpace-flavoured profile page with a Twitter-style timeline */
+
 :root {
   color-scheme: light dark;
-  --bg: #fafaf8;
-  --card: #ffffff;
-  --fg: #1c1c1e;
-  --muted: #6b6b70;
-  --border: #e6e6e3;
-  --accent: #2f6fde;
-  --pill-bg: #eef3fd;
-  --pill-fg: #2a5bb8;
-  --new: #fff4c2;
+  --page: #e9eef5;
+  --topbar: #1f4f91;
+  --topbar-fg: #ffffff;
+  --topbar-link: #cfe0ff;
+  --panel: #ffffff;
+  --fg: #1d2330;
+  --muted: #5d6676;
+  --border: #b7c9e2;
+  --rule: #e3e9f2;
+  --link: #1a4fa8;
+  --box-head: #6b9bd6;
+  --box-head-fg: #ffffff;
+  --box-body: #f3f7fd;
+  --alt-head: #ffd9ae;
+  --alt-head-fg: #b04a00;
+  --banner: #fff7e6;
+  --banner-border: #f0c98a;
+  --pill-bg: #e4eefc;
+  --pill-fg: #1d4f9c;
+  --online: #2c9a3c;
+  --new: #fff2bf;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #111214;
-    --card: #1a1b1e;
-    --fg: #e9e9ec;
-    --muted: #9a9aa2;
-    --border: #2a2b2f;
-    --accent: #7aa5ff;
-    --pill-bg: #1f2a40;
+    --page: #0f141c;
+    --topbar: #142a4d;
+    --topbar-fg: #ffffff;
+    --topbar-link: #a9c4ff;
+    --panel: #171d27;
+    --fg: #e6e9ef;
+    --muted: #98a2b3;
+    --border: #2c3b55;
+    --rule: #252e3d;
+    --link: #8ab4ff;
+    --box-head: #2e5793;
+    --box-head-fg: #ffffff;
+    --box-body: #1a2230;
+    --alt-head: #4a2c12;
+    --alt-head-fg: #ffc48a;
+    --banner: #241d12;
+    --banner-border: #5a4320;
+    --pill-bg: #1f2c45;
     --pill-fg: #a9c4ff;
+    --online: #5fd16f;
     --new: #3a3420;
   }
 }
@@ -29,81 +55,258 @@
 
 body {
   margin: 0;
-  background: var(--bg);
+  background: var(--page);
   color: var(--fg);
-  font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  -webkit-font-smoothing: antialiased;
+  font: 14px/1.5 Verdana, Tahoma, "Segoe UI", system-ui, sans-serif;
 }
 
-main {
-  max-width: 600px;
+a { color: var(--link); }
+a:hover { text-decoration-thickness: 2px; }
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* --- top bar ----------------------------------------------------------- */
+
+.topbar { background: var(--topbar); color: var(--topbar-fg); }
+
+.topbar-inner {
+  max-width: 980px;
   margin: 0 auto;
-  padding: 40px 16px 24px;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
 }
 
-.site-header h1 {
-  margin: 0;
-  font-size: 1.5rem;
-  letter-spacing: -0.01em;
+.wordmark {
+  color: var(--topbar-fg);
+  font: 700 22px/1 "Trebuchet MS", Verdana, sans-serif;
+  letter-spacing: -0.02em;
+  text-decoration: none;
 }
 
-.tagline {
-  margin: 4px 0 24px;
-  color: var(--muted);
-  font-size: 0.9375rem;
+.topnav { display: flex; gap: 14px; flex-wrap: wrap; }
+
+.topnav a {
+  color: var(--topbar-link);
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
 }
 
-.feed-status {
-  min-height: 1.25em;
-  margin: 0 0 8px;
-  color: var(--muted);
-  font-size: 0.8125rem;
+.topnav a:hover { color: var(--topbar-fg); text-decoration: underline; }
+
+/* --- layout ------------------------------------------------------------ */
+
+.layout {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 20px 16px;
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
 }
 
-.feed {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+.profile-col, .timeline-col {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
+  min-width: 0;
 }
+
+@media (max-width: 760px) {
+  .layout { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* --- boxes ------------------------------------------------------------- */
+
+.box {
+  background: var(--box-body);
+  border: 1px solid var(--border);
+}
+
+.box-title {
+  margin: 0;
+  padding: 5px 10px;
+  background: var(--box-head);
+  color: var(--box-head-fg);
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.box-title-alt { background: var(--alt-head); color: var(--alt-head-fg); }
+.box-title-meta { font-weight: 400; font-size: 12px; }
+
+/* --- profile ----------------------------------------------------------- */
+
+.profile {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 12px;
+}
+
+.profile-name {
+  margin: 0 0 10px;
+  font: 700 20px/1.2 "Trebuchet MS", Verdana, sans-serif;
+}
+
+.profile-card { display: flex; gap: 12px; align-items: flex-start; }
+
+.profile-pic {
+  width: 130px;
+  height: 130px;
+  object-fit: cover;
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.profile-facts { margin: 0; font-size: 12px; min-width: 0; }
+.profile-facts div { margin-bottom: 6px; }
+.profile-facts dt { color: var(--muted); }
+.profile-facts dd { margin: 0; overflow-wrap: anywhere; }
+.online { color: var(--online); font-weight: 700; }
+
+.contact-grid {
+  list-style: none;
+  margin: 0;
+  padding: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 10px;
+}
+
+.contact-grid a {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.contact-grid a:hover { text-decoration: underline; }
+
+.contact-icon {
+  display: inline-grid;
+  place-items: center;
+  min-width: 30px;
+  height: 22px;
+  padding: 0 4px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.url-box { padding: 8px 10px; font-size: 12px; }
+.url-box p { margin: 0; }
+
+.details {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.details th, .details td {
+  padding: 6px 10px;
+  border-top: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.details tr:first-child th, .details tr:first-child td { border-top: 0; }
+
+.details th {
+  width: 90px;
+  color: var(--alt-head-fg);
+  background: var(--alt-head);
+  font-weight: 700;
+}
+
+.project-list { display: flex; flex-wrap: wrap; gap: 4px; }
+
+/* --- timeline ---------------------------------------------------------- */
+
+.network-banner {
+  background: var(--banner);
+  border: 1px solid var(--banner-border);
+  padding: 12px 14px;
+  font-weight: 700;
+}
+
+.timeline-box { background: var(--panel); }
+
+.feed-status {
+  margin: 0;
+  padding: 0 14px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.feed-status:not(:empty) { padding: 8px 14px 0; }
+
+.feed { list-style: none; margin: 0; padding: 0; }
 
 .post {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 14px 16px;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 12px;
+  padding: 14px;
+  border-top: 1px solid var(--rule);
+  background: var(--panel);
 }
 
+.feed .post:first-child { border-top: 0; }
+
+.post-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.post-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 6px;
+  font-size: 13px;
+}
+
+.post-name { font-weight: 700; }
+.post-handle, .post-dot, .post time { color: var(--muted); }
+.post time { cursor: default; }
+
 .post-text {
-  margin: 0;
+  margin: 4px 0 0;
+  font-size: 14px;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
 
-.post-text a { color: var(--accent); }
-
-.post-meta {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 10px;
-  color: var(--muted);
-  font-size: 0.8125rem;
-}
+.post-foot { margin-top: 8px; }
 
 .pill {
   display: inline-block;
-  padding: 1px 10px;
+  padding: 1px 9px;
   border-radius: 999px;
   background: var(--pill-bg);
   color: var(--pill-fg);
-  font-weight: 600;
-  font-size: 0.75rem;
+  font-size: 11px;
+  font-weight: 700;
 }
-
-.post time { cursor: default; }
 
 .post.is-new {
   animation:
@@ -118,7 +321,7 @@ main {
 
 @keyframes new-highlight {
   from { background: var(--new); }
-  to { background: var(--card); }
+  to { background: var(--panel); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -126,14 +329,15 @@ main {
 }
 
 .empty {
+  margin: 0;
+  padding: 32px 14px;
   color: var(--muted);
   text-align: center;
-  padding: 32px 0;
 }
 
 .site-footer {
-  margin-top: 32px;
+  padding: 8px 16px 32px;
   text-align: center;
   color: var(--muted);
-  font-size: 0.75rem;
+  font-size: 11px;
 }

@@ -5,13 +5,23 @@
   const CLOCK_MS = 30000;
   const URL_PATTERN = /https?:\/\/[^\s<>"']+/g;
   const TRAILING_PUNCTUATION = /[.,;:!?)\]}'"]+$/;
+  const RECENT_MS = 60 * 60 * 1000; // "Posted recently" window
+  const AUTHOR_NAME = document.body.dataset.name || "devlog";
+  const AUTHOR_HANDLE = document.body.dataset.handle || "devlog";
 
   const feedEl = document.getElementById("feed");
   const emptyEl = document.getElementById("empty");
   const statusEl = document.getElementById("feed-status");
+  const postCountEl = document.getElementById("post-count");
+  const statPostsEl = document.getElementById("stat-posts");
+  const statLastEl = document.getElementById("stat-last");
+  const statNowEl = document.getElementById("stat-now");
+  const onlineEl = document.getElementById("online");
+  const projectListEl = document.getElementById("project-list");
 
   const rendered = new Map(); // post id -> <li>
   let firstLoad = true;
+  let currentPosts = [];
   let loading = false;
 
   // --- time ---------------------------------------------------------------
@@ -35,9 +45,12 @@
   }
 
   function refreshTimes() {
-    for (const timeEl of feedEl.querySelectorAll("time[datetime]")) {
+    for (const timeEl of document.querySelectorAll("time[datetime]")) {
       timeEl.textContent = relativeTime(new Date(timeEl.dateTime));
     }
+    const latest = currentPosts[0];
+    const created = latest ? new Date(latest.created_at) : null;
+    onlineEl.hidden = !(created && Date.now() - created < RECENT_MS);
   }
 
   // --- text ---------------------------------------------------------------
@@ -80,34 +93,98 @@
 
   // --- rendering ----------------------------------------------------------
 
+  function el(tag, className, text) {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text != null) node.textContent = text;
+    return node;
+  }
+
+  function makePill(project) {
+    return el("span", "pill", String(project));
+  }
+
+  function makeTime(created) {
+    const timeEl = el("time", null, relativeTime(created));
+    timeEl.dateTime = created.toISOString();
+    timeEl.title = created.toLocaleString();
+    return timeEl;
+  }
+
   function renderPost(post) {
-    const li = document.createElement("li");
-    li.className = "post";
+    const li = el("li", "post");
     li.dataset.id = String(post.id);
 
-    const text = document.createElement("p");
-    text.className = "post-text";
-    appendLinkified(text, String(post.text ?? ""));
+    const avatar = el("img", "post-avatar");
+    avatar.src = "avatar.jpg";
+    avatar.alt = "";
+    avatar.width = 44;
+    avatar.height = 44;
 
-    const meta = document.createElement("div");
-    meta.className = "post-meta";
-    if (post.project) {
-      const pill = document.createElement("span");
-      pill.className = "pill";
-      pill.textContent = String(post.project);
-      meta.append(pill);
-    }
+    const body = el("div", "post-body");
+    const head = el("div", "post-head");
+    head.append(
+      el("span", "post-name", AUTHOR_NAME),
+      el("span", "post-handle", `@${AUTHOR_HANDLE}`),
+    );
     const created = new Date(post.created_at);
     if (!Number.isNaN(created.getTime())) {
-      const timeEl = document.createElement("time");
-      timeEl.dateTime = created.toISOString();
-      timeEl.title = created.toLocaleString();
-      timeEl.textContent = relativeTime(created);
-      meta.append(timeEl);
+      head.append(el("span", "post-dot", "·"), makeTime(created));
     }
 
-    li.append(text, meta);
+    const text = el("p", "post-text");
+    appendLinkified(text, String(post.text ?? ""));
+    body.append(head, text);
+
+    if (post.project) {
+      const foot = el("div", "post-foot");
+      foot.append(makePill(post.project));
+      body.append(foot);
+    }
+
+    li.append(avatar, body);
     return li;
+  }
+
+  // --- profile stats ------------------------------------------------------
+
+  function projectCounts(posts) {
+    const counts = new Map();
+    for (const post of posts) {
+      if (!post.project) continue;
+      const name = String(post.project);
+      counts.set(name, (counts.get(name) || 0) + 1);
+    }
+    return [...counts].sort((a, b) => b[1] - a[1]);
+  }
+
+  function updateProjects(posts) {
+    const counts = projectCounts(posts);
+    if (!counts.length) {
+      projectListEl.textContent = "—";
+      return;
+    }
+    projectListEl.replaceChildren(
+      ...counts.map(([name, n]) => {
+        const pill = makePill(name);
+        pill.title = `${n} post${n === 1 ? "" : "s"}`;
+        return pill;
+      }),
+    );
+  }
+
+  function updateStats(posts) {
+    const count = posts.length;
+    statPostsEl.textContent = String(count);
+    postCountEl.textContent = `${count} post${count === 1 ? "" : "s"}`;
+    const latest = posts[0];
+    const created = latest ? new Date(latest.created_at) : null;
+    const valid = created && !Number.isNaN(created.getTime());
+    statLastEl.replaceChildren(valid ? makeTime(created) : "never");
+    const current = posts.find((post) => post.project);
+    statNowEl.textContent = current ? String(current.project) : "—";
+    onlineEl.hidden = !(valid && Date.now() - created < RECENT_MS);
+    updateProjects(posts);
   }
 
   function markNew(li) {
@@ -146,6 +223,8 @@
     removeMissing(new Set(valid.map((post) => String(post.id))));
     addNew(valid, !firstLoad);
     emptyEl.hidden = valid.length > 0;
+    currentPosts = valid;
+    updateStats(valid);
   }
 
   // --- polling ------------------------------------------------------------

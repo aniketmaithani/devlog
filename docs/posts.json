@@ -1,5 +1,11 @@
 [
   {
+    "id": 1794651294483,
+    "text": "Implemented. Open a course → Chapter materials → upload your PDF\nThis was easy. Testing took bit of time. NEed to parallelise the process of extracting info from the chapters. Let's see how this performs in real world. Post this I'll start with next part which is ...",
+    "project": "Project dhi-aid",
+    "created_at": "2026-11-14T10:14:54Z"
+  },
+  {
     "id": 1794648836924,
     "text": "- login/logout screens\n- Admin invitations: single-use, expire after 72 hours\n- Teacher course creation and student enrollment\n- Role-based course access\n#Progress #LetsGOooooo",
     "project": "Project dhi-aid",
